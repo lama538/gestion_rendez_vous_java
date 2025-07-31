@@ -3,14 +3,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Liste des Agendas</title>
   <style>
+    /* Styles globaux simplifiés */
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
     }
 
     body {
@@ -36,7 +35,7 @@
       padding: 20px;
       background: rgba(255, 255, 255, 0.95);
       border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
     .header {
@@ -50,7 +49,6 @@
 
     .header h1 {
       color: #333;
-      margin: 0;
     }
 
     .header-actions {
@@ -126,25 +124,19 @@
       background-color: #f1f1f1;
     }
 
-    .day-badge {
+
+    .date-badge {
       display: inline-block;
       padding: 4px 10px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: bold;
-      text-transform: capitalize;
-      color: white;
-      min-width: 70px;
+      color: #333;
+      background-color: #e9ecef;
+      min-width: 90px;
       text-align: center;
+      font-family: monospace;
     }
-
-    .day-lundi { background-color: #dc3545; }
-    .day-mardi { background-color: #28a745; }
-    .day-mercredi { background-color: #17a2b8; }
-    .day-jeudi { background-color: #ffc107; color: #333; }
-    .day-vendredi { background-color: #6f42c1; }
-    .day-samedi { background-color: #fd7e14; }
-    .day-dimanche { background-color: #e83e8c; }
 
     .time-display {
       font-family: monospace;
@@ -214,13 +206,9 @@
   <div class="header">
     <h1>Liste des Agendas</h1>
     <div class="header-actions">
-      <input type="text" class="search-box" placeholder="Rechercher..." id="searchInput">
-      <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-secondary">
-        ← Retour
-      </a>
-      <a href="${pageContext.request.contextPath}/agenda/create" class="btn btn-primary">
-        + Nouvel Agenda
-      </a>
+      <input type="text" class="search-box" placeholder="Rechercher..." id="searchInput" />
+      <a href="${pageContext.request.contextPath}/dashboard" class="btn btn-secondary">← Retour</a>
+      <a href="${pageContext.request.contextPath}/agenda/create" class="btn btn-primary">+ Nouvel Agenda</a>
     </div>
   </div>
 
@@ -230,9 +218,7 @@
         <div class="empty-message">
           <h3>Aucun agenda trouvé</h3>
           <p>Commencez par créer votre premier agenda.</p>
-          <a href="${pageContext.request.contextPath}/agenda/create" class="btn btn-primary">
-            Créer un agenda
-          </a>
+          <a href="${pageContext.request.contextPath}/agenda/create" class="btn btn-primary">Créer un agenda</a>
         </div>
       </c:when>
       <c:otherwise>
@@ -242,7 +228,7 @@
             <tr>
               <th>ID</th>
               <th>Médecin</th>
-              <th>Jour</th>
+              <th>Date</th>
               <th>Heure de début</th>
               <th>Heure de fin</th>
             </tr>
@@ -252,15 +238,13 @@
               <tr>
                 <td data-label="ID">${agenda.id}</td>
                 <td data-label="Médecin">Dr. ${agenda.medecin.username}</td>
-                <td data-label="Jour">
-                    <span class="day-badge day-${agenda.jourSemaine}">
-                        ${agenda.jourSemaine}
-                    </span>
+                <td data-label="Date">
+                  <span class="date-badge">${agenda.dateAgenda}</span>
                 </td>
-                <td data-label="Début">
+                <td data-label="Heure de début">
                   <span class="time-display">${agenda.heureDebut}</span>
                 </td>
-                <td data-label="Fin">
+                <td data-label="Heure de fin">
                   <span class="time-display">${agenda.heureFin}</span>
                 </td>
               </tr>

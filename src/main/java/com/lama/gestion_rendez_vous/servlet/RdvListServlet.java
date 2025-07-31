@@ -26,7 +26,27 @@ public class RdvListServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        List<Rdv> rdvs = rdvDAO.findAll();
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        List<Rdv> rdvs;
+        if ("medecin".equalsIgnoreCase(currentUser.getRole())) {
+
+            rdvs = rdvDAO.getRdvsByMedecin(currentUser.getId());
+        } else {
+
+            rdvs = rdvDAO.findAll();
+        }
+
         List<Patient> patients = patientDAO.findAll();
         List<User> medecins = userDAO.findAllMedecins();
 
@@ -36,4 +56,5 @@ public class RdvListServlet extends HttpServlet {
 
         req.getRequestDispatcher("/WEB-INF/rdvs/list.jsp").forward(req, resp);
     }
+
 }

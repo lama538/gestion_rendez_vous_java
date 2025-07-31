@@ -218,7 +218,7 @@
 
 <div class="header">
   <div class="logo">
-    <i class="fas fa-heartbeat"></i> MediDental
+    <i></i> MediDental
   </div>
   <div class="user-info">
     <span>Bonjour, <%= user.getUsername() %></span>
@@ -249,51 +249,58 @@
     <% if ("admin".equals(role)) { %>
 
     <div class="action-card">
-      <i class="fas fa-users"></i>
+      <i></i>
       <h3>Utilisateurs</h3>
       <p>Gérer tous les utilisateurs du système</p>
       <a href="<%= request.getContextPath() %>/users/list" class="btn">Voir la liste</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-user-md"></i>
+      <i ></i>
       <h3>Médecins</h3>
       <p>Gérer les comptes médecins</p>
       <a href="<%= request.getContextPath() %>/medecins/list" class="btn">Voir la liste</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-user-injured"></i>
+      <i></i>
       <h3>Patients</h3>
       <p>Gérer les comptes patients</p>
       <a href="<%= request.getContextPath() %>/patients/list" class="btn">Voir la liste</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-calendar-check"></i>
+      <i ></i>
       <h3>Rendez-vous</h3>
       <p>Voir tous les rendez-vous</p>
       <a href="<%= request.getContextPath() %>/rdvs/list" class="btn">Voir le planning</a>
     </div>
 
+    <div class="action-card">
+      <i></i>
+      <h3>Mon Agenda</h3>
+      <p>Gérer votre planning</p>
+      <a href="<%= request.getContextPath() %>/agenda/list" class="btn">Mon planning</a>
+    </div>
+
     <% } else if ("medecin".equals(role)) { %>
 
     <div class="action-card">
-      <i class="fas fa-calendar-check"></i>
+      <i ></i>
       <h3>Mes Rendez-vous</h3>
       <p>Consulter vos rendez-vous</p>
       <a href="<%= request.getContextPath() %>/rdvs/list" class="btn">Voir mes RDV</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-user-injured"></i>
+      <i></i>
       <h3>Mes Patients</h3>
       <p>Consulter la liste de vos patients</p>
       <a href="<%= request.getContextPath() %>/patients/list" class="btn">Voir les patients</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-calendar-day"></i>
+      <i></i>
       <h3>Mon Agenda</h3>
       <p>Gérer votre planning</p>
       <a href="<%= request.getContextPath() %>/agenda/list" class="btn">Mon planning</a>
@@ -302,21 +309,21 @@
     <% } else if ("secretaire".equals(role)) { %>
 
     <div class="action-card">
-      <i class="fas fa-calendar-check"></i>
+      <i></i>
       <h3>Rendez-vous</h3>
       <p>Voir tous les rendez-vous</p>
       <a href="<%= request.getContextPath() %>/rdvs/list" class="btn">Voir les RDV</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-user-injured"></i>
+      <i></i>
       <h3>Patients</h3>
       <p>Consulter la liste des patients</p>
       <a href="<%= request.getContextPath() %>/patients/list" class="btn">Voir les patients</a>
     </div>
 
     <div class="action-card">
-      <i class="fas fa-user-md"></i>
+      <i></i>
       <h3>Médecins</h3>
       <p>Consulter la liste des médecins</p>
       <a href="<%= request.getContextPath() %>/medecins/list" class="btn">Voir les médecins</a>

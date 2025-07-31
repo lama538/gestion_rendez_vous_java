@@ -104,6 +104,17 @@ public class RdvDAO {
             em.close();
         }
     }
+    public List<Rdv> getRdvsByMedecin(int medecinId) {
+        EntityManager em = JPAUtil.getEntityManager();
+        try {
+            String jpql = "SELECT r FROM Rdv r WHERE r.medecinId = :medecinId ORDER BY r.dateRdv DESC";
+            return em.createQuery(jpql, Rdv.class)
+                    .setParameter("medecinId", medecinId)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
 
 

@@ -51,7 +51,7 @@
 </head>
 <body>
 <div class="content">
-    <h1>Bienvenue A MediCare!</h1>
+    <h1>Bienvenue A MediDental!</h1>
     <a href="register.jsp">Inscription</a>
     <a href="login.jsp">Connexion</a>
 </div>

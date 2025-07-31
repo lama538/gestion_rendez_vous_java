@@ -97,7 +97,7 @@
       font-size: 1rem;
     }
 
-    select, input[type="time"] {
+    select, input[type="time"], input[type="date"] {
       width: 100%;
       padding: 12px 15px;
       font-size: 1rem;
@@ -109,7 +109,7 @@
       font-weight: 500;
     }
 
-    select:focus, input[type="time"]:focus {
+    select:focus, input[type="time"]:focus, input[type="date"]:focus {
       outline: none;
       border-color: #3498db;
       box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
@@ -157,33 +157,36 @@
 
   <div class="header">
     <h1>Créer un Agenda</h1>
-    <p>Définir les horaires d'un médecin</p>
+    <p>Définir les horaires d'un médecin pour une date</p>
   </div>
 
   <form action="${pageContext.request.contextPath}/agenda/create" method="post">
 
-    <div class="form-group">
-      <label for="medecinUsername">Médecin :</label>
-      <select id="medecinUsername" name="medecinUsername" required>
-        <option value="">Choisir un médecin</option>
-        <c:forEach var="medecin" items="${medecins}">
-          <option value="${medecin.username}">${medecin.username}</option>
-        </c:forEach>
-      </select>
-    </div>
+    <c:choose>
+      <c:when test="${currentUser.role == 'admin'}">
+
+        <div class="form-group">
+          <label for="medecinUsername">Médecin :</label>
+          <select id="medecinUsername" name="medecinUsername" required>
+            <option value="">Choisir un médecin</option>
+            <c:forEach var="medecin" items="${medecins}">
+              <option value="${medecin.username}">${medecin.username}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </c:when>
+      <c:otherwise>
+
+        <input type="hidden" name="medecinUsername" value="${currentUser.username}" />
+        <p><strong>Médecin connecté :</strong> Dr. ${currentUser.username}</p>
+      </c:otherwise>
+    </c:choose>
+
 
     <div class="form-group">
-      <label for="jourSemaine">Jour de la semaine :</label>
-      <select id="jourSemaine" name="jourSemaine" required>
-        <option value="">Choisir un jour</option>
-        <option value="lundi">Lundi</option>
-        <option value="mardi">Mardi</option>
-        <option value="mercredi">Mercredi</option>
-        <option value="jeudi">Jeudi</option>
-        <option value="vendredi">Vendredi</option>
-        <option value="samedi">Samedi</option>
-        <option value="dimanche">Dimanche</option>
-      </select>
+      <label for="dateAgenda">Date :</label>
+      <input type="date" id="dateAgenda" name="dateAgenda"
+             min="${today}" required />
     </div>
 
     <div class="time-row">
@@ -201,6 +204,19 @@
     <button type="submit" class="submit-btn">Créer l'Agenda</button>
   </form>
 </div>
+
+<script>
+
+  document.querySelector('form').addEventListener('submit', function(e) {
+    const heureDebut = document.getElementById('heureDebut').value;
+    const heureFin = document.getElementById('heureFin').value;
+
+    if (heureDebut && heureFin && heureFin <= heureDebut) {
+      e.preventDefault();
+      alert('L\'heure de fin doit être après l\'heure de début');
+    }
+  });
+</script>
 
 </body>
 </html>

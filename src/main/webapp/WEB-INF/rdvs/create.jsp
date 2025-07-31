@@ -125,7 +125,25 @@
   <h1>Créer un rendez-vous</h1>
 
   <form action="${pageContext.request.contextPath}/rdvs/create" method="post">
-
+    <c:choose>
+      <c:when test="${not empty medecins}">
+        <!-- Admin : affiche le select complet -->
+        <div class="form-group">
+          <label for="medecinId">Médecin</label>
+          <select id="medecinId" name="medecinId" required>
+            <option value="">Sélectionner un médecin</option>
+            <c:forEach var="medecin" items="${medecins}">
+              <option value="${medecin.id}">${medecin.username}</option>
+            </c:forEach>
+          </select>
+        </div>
+      </c:when>
+      <c:otherwise>
+        <!-- Médecin connecté : champ caché avec son id -->
+        <input type="hidden" id="medecinId" name="medecinId" value="${currentMedecin.id}" />
+        <p>Médecin : Dr. ${currentMedecin.username}</p>
+      </c:otherwise>
+    </c:choose>
     <div class="form-group">
       <label for="patientId">Patient</label>
       <select id="patientId" name="patientId" required>
@@ -137,15 +155,7 @@
     </div>
 
 
-    <div class="form-group">
-      <label for="medecinId">Médecin</label>
-      <select id="medecinId" name="medecinId" required>
-        <option value="">Sélectionner un médecin</option>
-        <c:forEach var="medecin" items="${medecins}">
-          <option value="${medecin.id}">${medecin.username}</option>
-        </c:forEach>
-      </select>
-    </div>
+
 
 
     <div class="form-group">
@@ -165,8 +175,6 @@
       <select id="statut" name="statut" required>
         <option value="">Sélectionner un statut</option>
         <option value="en_attente">En attente</option>
-        <option value="confirme">Confirmé</option>
-        <option value="annule">Annulé</option>
       </select>
     </div>
 

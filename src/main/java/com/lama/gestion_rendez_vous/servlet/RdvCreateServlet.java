@@ -30,18 +30,54 @@ public class RdvCreateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<User> medecins = userDAO.findAllMedecins();
-        List<Patient> patients = patientDAO.findAll();
 
-        req.setAttribute("medecins", medecins);
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        List<Patient> patients = patientDAO.findAll();
         req.setAttribute("patients", patients);
+
+        if ("admin".equalsIgnoreCase(currentUser.getRole())) {
+            // Admin peut choisir un médecin parmi tous
+            List<User> medecins = userDAO.findAllMedecins();
+            req.setAttribute("medecins", medecins);
+        } else if ("medecin".equalsIgnoreCase(currentUser.getRole())) {
+            // Médecin connecté : on ne passe pas la liste, mais son propre id
+            req.setAttribute("currentMedecin", currentUser);
+        } else {
+            // Autres rôles, accès interdit ou vide
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès refusé");
+            return;
+        }
 
         req.getRequestDispatcher("/WEB-INF/rdvs/create.jsp").forward(req, resp);
     }
 
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        User currentUser = (User) session.getAttribute("user");
+        if (currentUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
 
         try {
             String patientIdStr = req.getParameter("patientId");
@@ -58,6 +94,11 @@ public class RdvCreateServlet extends HttpServlet {
                 return;
             }
 
+
+            if ("medecin".equalsIgnoreCase(currentUser.getRole())) {
+                medecinIdStr = String.valueOf(currentUser.getId());
+            }
+
             int patientId = Integer.parseInt(patientIdStr);
             int medecinId = Integer.parseInt(medecinIdStr);
 
@@ -71,27 +112,22 @@ public class RdvCreateServlet extends HttpServlet {
             rdv.setDateRdv(Timestamp.valueOf(dateTime));
             rdv.setStatut(statut);
 
-
-            String confirmationCode = UUID.randomUUID().toString();
+            String confirmationCode = java.util.UUID.randomUUID().toString();
             rdv.setConfirmationCode(confirmationCode);
             rdv.setConfirmed(false);
 
-
             rdvDAO.save(rdv);
-
 
             Patient patient = patientDAO.findById(patientId);
             if (patient != null && patient.getEmail() != null) {
                 String email = patient.getEmail();
-                String nom = patient.getNom(); // ou getPrenom()
+                String nom = patient.getNom();
                 String dateHeure = dateRdvStr + " à " + heureRdvStr;
-
 
                 String confirmationLink = req.getRequestURL().toString()
                         .replace(req.getServletPath(), "") + "/confirm-rdv?code=" + confirmationCode;
 
                 EmailUtil.sendConfirmationEmail(email, nom, date + " à " + heureRdvStr, confirmationLink);
-
             }
 
             resp.sendRedirect(req.getContextPath() + "/rdvs/list");
@@ -104,4 +140,5 @@ public class RdvCreateServlet extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Paramètres invalides.");
         }
     }
+
 }
