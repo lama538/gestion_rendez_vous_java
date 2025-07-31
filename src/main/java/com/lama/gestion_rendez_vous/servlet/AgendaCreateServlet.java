@@ -63,10 +63,10 @@ public class AgendaCreateServlet extends HttpServlet {
             String medecinUsername;
 
             if ("admin".equalsIgnoreCase(currentUser.getRole())) {
-                // Pour l'admin, on prend la valeur du formulaire
+
                 medecinUsername = req.getParameter("medecinUsername");
             } else if ("medecin".equalsIgnoreCase(currentUser.getRole())) {
-                // Pour le médecin connecté, on récupère directement son username en session
+
                 medecinUsername = currentUser.getUsername();
             } else {
                 resp.sendError(403, "Accès non autorisé");
